@@ -30,10 +30,6 @@
 			<id>spring-releases</id>
 			<url>http://repo.spring.io/libs-release</url>
 		</repository>
-		<repository>
-			<id>spring-libs-snapshot</id>
-			<url>http://repo.spring.io/libs-snapshot</url>
-		</repository>
 	</repositories>
 
 </project>
