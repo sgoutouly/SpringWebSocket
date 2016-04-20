@@ -23,18 +23,18 @@ import java.util.logging.Logger;
  */
 @Configuration
 @EnableWebSocket
-public class BasicWebSocketConfig implements WebSocketConfigurer {
+public class BrockerWebSocketConfig implements WebSocketConfigurer {
 
-    private static final Logger LOG = Logger.getLogger(BasicWebSocketConfig.class.getName());
+    private static final Logger LOG = Logger.getLogger(BrockerWebSocketConfig.class.getName());
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler(), "/broadcast");
+        registry.addHandler(webSocketHandler(), "/broadcast").withSockJS();
     }
 
     @Bean
-    PingWebSocketHandler webSocketHandler() {
-        return new PingWebSocketHandler();
+    BroadcastWebSocketHandler webSocketHandler() {
+        return new BroadcastWebSocketHandler();
     }
 
     /**
@@ -42,7 +42,7 @@ public class BasicWebSocketConfig implements WebSocketConfigurer {
      * Handler basique chargé de lister toutes les sessions WebSocket ouvertes et de router chaque message
      * textuel reçu vers la totalité des sessions listées
      */
-    private static class PingWebSocketHandler extends TextWebSocketHandler {
+    private static class BroadcastWebSocketHandler extends TextWebSocketHandler {
 
         /** Les sessions Websocket acives */
         private List<WebSocketSession> sessions = new CopyOnWriteArrayList<WebSocketSession>();
