@@ -15,8 +15,7 @@
     websocket.onerror = function(evt) { writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data) };
     
     stompClient = Stomp.over(websocket);
-    stompClient.connect(
-      {},
+    stompClient.connect({},
       function() {
         writeToScreen("CONNECTED");
         subscribeToChat();
@@ -46,7 +45,6 @@
   }
 
   window.addEventListener("load", init, false);
-
   </script>
   </head>
   <body>
