@@ -1,56 +1,66 @@
 <!DOCTYPE html>
-  <meta charset="utf-8" />
+<meta charset="utf-8" />
+<html>
+  <head>
   <title>WebSocket Test</title>
+  <script language="javascript" type="text/javascript" src="stomp.min.js"></script>
   <script language="javascript" type="text/javascript">
 
-  var wsUri = "ws://localhost:8080/broadcast";
+  var wsUri = "ws://localhost:8080/servicesSocket";
   var output;
+  var stompClient;
+  var subscription;
 
-  function init()
-  {
+  function init() {
     output = document.getElementById("output");
     testWebSocket();
   }
 
-  function testWebSocket()
-  {
+  function testWebSocket() {
     websocket = new WebSocket(wsUri);
-    websocket.onopen = function(evt) { onOpen(evt) };
     websocket.onclose = function(evt) { onClose(evt) };
     websocket.onmessage = function(evt) { onMessage(evt) };
     websocket.onerror = function(evt) { onError(evt) };
+    
+    stompClient = Stomp.over(websocket);
+    stompClient.connect(
+      {},
+      function() {
+        writeToScreen("CONNECTED");
+        subscribeToChat();
+      },
+      function(error) {
+        writeToScreen("ERREUR DE CONNEXION : " + error.headers.message);
+      });
+
+    
   }
 
-  function onOpen(evt)
-  {
-    writeToScreen("CONNECTED");
-    doSend("coucou");
+  function subscribeToChat() {
+    subscription = stompClient.subscribe("/topic/chat", 
+      function(message) { 
+        writeToScreen('<span style="color: blue;">RESPONSE: ' + message.body + '</span>')
+      });
   }
 
-  function onClose(evt)
-  {
+  function onClose(evt) {
     writeToScreen("DISCONNECTED");
   }
 
-  function onMessage(evt)
-  {
-    writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-    websocket.close();
+  function onMessage(evt) {
+    writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
   }
 
-  function onError(evt)
-  {
+  function onError(evt) {
     writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
   }
 
-  function doSend(message)
-  {
+  function doSend(message) {
     writeToScreen("SENT: " + message);
-    websocket.send(message);
+    stompClient.send("/topic/chat", {}, message);
   }
 
-  function writeToScreen(message)
-  {
+  function writeToScreen(message) {
     var pre = document.createElement("p");
     pre.style.wordWrap = "break-word";
     pre.innerHTML = message;
@@ -60,7 +70,14 @@
   window.addEventListener("load", init, false);
 
   </script>
-
-  <h2>WebSocket Test</h2>
-
-  <div id="output"></div>
+  </head>
+  <body>
+    <h2>WebSocket Test</h2>
+    <div id="output"></div>
+    <form>
+    <textarea cols="70" id="message"></textarea>
+    <br /><input type="button" value="Envoyer !" onclick="doSend(getElementById('message').value); getElementById('message').value = ''" />  
+    </form>
+    
+  </body>
+  </html>
