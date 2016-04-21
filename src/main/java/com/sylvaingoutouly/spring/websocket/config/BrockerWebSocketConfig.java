@@ -30,13 +30,13 @@ public class BrockerWebSocketConfig extends AbstractWebSocketMessageBrokerConfig
 
 
     /**
-     *
+     * Mise en oeuvre d'un borcker basique qui broadcaste les messages vers les clients
+     * abonnés au channel /topic
      * @param config
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic");
     }
-
 
 }
