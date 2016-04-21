@@ -9,15 +9,16 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import java.util.logging.Logger;
 
 /**
- * Configuration de WebSocket avec STOMP. Implique l'usage d'un brocker pour router
+ * Configuration de WebSocket avec STOMP. Implique l'usage d'un broker pour router
  * les message vers des destinataires différents (clients connectés, contrôleur ou autre)
  * en fonction d'un entête de type destinataire placé dans l'enveloppe STOMP
+ * Ici on se contentra de router les messages vers les clients connectés
  */
 @Configuration
 @EnableWebSocketMessageBroker
-public class BrockerWebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+public class BrokerWebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
-    private static final Logger LOG = Logger.getLogger(BrockerWebSocketConfig.class.getName());
+    private static final Logger LOG = Logger.getLogger(BrokerWebSocketConfig.class.getName());
 
     /**
      * Déclare tous les endPoints accessibles aux clients webSocket
@@ -30,7 +31,7 @@ public class BrockerWebSocketConfig extends AbstractWebSocketMessageBrokerConfig
 
 
     /**
-     * Mise en oeuvre d'un borcker basique qui broadcaste les messages vers les clients
+     * Mise en oeuvre d'un broker basique qui broadcaste les messages vers les clients
      * abonnés au channel /topic
      * @param config
      */
