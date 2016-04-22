@@ -5,7 +5,7 @@
   function init() {
 
     websocket = new WebSocket("ws://localhost:8080/servicesSocket");
-    websocket.onclose = function(evt) { writeToScreen("DISCONNECTED"); };
+    websocket.onclose = function(evt) { writeToScreen("DECONNECTE !"); };
     websocket.onerror = function(evt) { writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data) };
 
     document.getElementById("sendToChatButton").addEventListener("click",
@@ -28,7 +28,7 @@
     stompClient = Stomp.over(websocket);
     stompClient.connect({},
       function() {
-        writeToScreen("CONNECTED");
+        writeToScreen("CONNECTE !");
         subscribeToChat();
       },
       function(error) {
@@ -39,18 +39,18 @@
   function subscribeToChat() {
     subscription = stompClient.subscribe("/topic/chat",
       function(message) {
-        writeToScreen('<span style="color: blue;">RESPONSE: ' + message.body + '</span>')
+        writeToScreen('<span style="color: blue;">RECU: ' + message.body + '</span>')
       });
   }
 
   function doSendToChat(message) {
-    writeToScreen("SENT: " + message);
+    writeToScreen("ENVOYE AUX ABONNES: " + message);
     stompClient.send("/topic/chat", {}, message);
   }
 
     function doSendToApplication(message) {
-      writeToScreen("SENT TO APPLICATION: " + message);
-      stompClient.send("/app/touch", {}, message);
+      writeToScreen("ENVOYE A L'APPLICATION: " + message);
+      stompClient.send("/app/chat", {}, JSON.stringify({"body": message}));
     }
 
   function writeToScreen(message) {
