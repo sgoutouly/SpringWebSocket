@@ -35,14 +35,14 @@ public class BrokerWebSocketConfig extends AbstractWebSocketMessageBrokerConfigu
 
     /**
      * Mise en oeuvre d'un broker basique qui broadcaste les messages vers les clients
-     * abonnés au channel /topic et d'un channel applicatif (/app)
+     * abonnés au channel /topic et d'un channel applicatif (/app) sur lequel un conrtrôleur
+     * va écouter les messages et les faire suivre à son tour après avoir ajouté un préfixe
      * @param registry
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic");
+        registry.setApplicationDestinationPrefixes("/app");
     }
-
 
 }
