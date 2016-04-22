@@ -1,13 +1,18 @@
-
+ /** */
  var stompClient;
+ /** */
  var subscription;
 
+  /**
+   *
+   */
   function init() {
-
+    //
     websocket = new WebSocket("ws://localhost:8080/servicesSocket");
     websocket.onclose = function(evt) { writeToScreen("DECONNECTE !"); };
     websocket.onerror = function(evt) { writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data) };
 
+    //
     document.getElementById("sendToChatButton").addEventListener("click",
       function() {
         doSendToChat(document.getElementById('message').value);
@@ -16,7 +21,7 @@
       ,false
     );
 
-
+    //
     document.getElementById("sendToAppButton").addEventListener("click",
       function() {
         doSendToApplication(document.getElementById('message').value);
@@ -25,6 +30,7 @@
       ,false
     );
 
+    //
     stompClient = Stomp.over(websocket);
     stompClient.connect({},
       function() {
@@ -36,6 +42,9 @@
       });
   }
 
+  /**
+   *
+   */
   function subscribeToChat() {
     subscription = stompClient.subscribe("/topic/chat",
       function(message) {
@@ -43,16 +52,25 @@
       });
   }
 
+  /**
+   *
+   */
   function doSendToChat(message) {
     writeToScreen("ENVOYE AUX ABONNES: " + message);
     stompClient.send("/topic/chat", {}, message);
   }
 
-    function doSendToApplication(message) {
-      writeToScreen("ENVOYE A L'APPLICATION: " + message);
-      stompClient.send("/app/chat", {}, JSON.stringify({"body": message}));
-    }
+  /**
+   *
+   */
+  function doSendToApplication(message) {
+    writeToScreen("ENVOYE A L'APPLICATION: " + message);
+    stompClient.send("/app/chat", {}, JSON.stringify({"body": message}));
+  }
 
+  /**
+   *
+   */
   function writeToScreen(message) {
     var pre = document.createElement("p");
     pre.style.wordWrap = "break-word";
