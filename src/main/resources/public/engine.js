@@ -3,9 +3,27 @@
  var subscription;
 
   function init() {
+
     websocket = new WebSocket("ws://localhost:8080/servicesSocket");
     websocket.onclose = function(evt) { writeToScreen("DISCONNECTED"); };
     websocket.onerror = function(evt) { writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data) };
+
+    document.getElementById("sendToChatButton").addEventListener("click",
+      function() {
+        doSendToChat(document.getElementById('message').value);
+        document.getElementById('message').value = '';
+      }
+      ,false
+    );
+
+
+    document.getElementById("sendToAppButton").addEventListener("click",
+      function() {
+        doSendToApplication(document.getElementById('message').value);
+        document.getElementById('message').value = '';
+      }
+      ,false
+    );
 
     stompClient = Stomp.over(websocket);
     stompClient.connect({},
@@ -25,10 +43,15 @@
       });
   }
 
-  function doSend(message) {
+  function doSendToChat(message) {
     writeToScreen("SENT: " + message);
     stompClient.send("/topic/chat", {}, message);
   }
+
+    function doSendToApplication(message) {
+      writeToScreen("SENT TO APPLICATION: " + message);
+      stompClient.send("/app/touch", {}, message);
+    }
 
   function writeToScreen(message) {
     var pre = document.createElement("p");

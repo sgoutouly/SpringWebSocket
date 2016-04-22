@@ -1,60 +1,26 @@
 <!DOCTYPE html>
-<meta charset="utf-8" />
+<meta charset="utf-8"/>
 <html>
-  <head>
-  <title>WebSocket Test</title>
-  <script language="javascript" type="text/javascript" src="stomp.min.js"></script>
-  <script language="javascript" type="text/javascript">
-
-  var stompClient;
-  var subscription;
-
-  function init() {
-    websocket = new WebSocket("ws://localhost:8080/servicesSocket");
-    websocket.onclose = function(evt) { writeToScreen("DISCONNECTED"); };
-    websocket.onerror = function(evt) { writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data) };
-    
-    stompClient = Stomp.over(websocket);
-    stompClient.connect({},
-      function() {
-        writeToScreen("CONNECTED");
-        subscribeToChat();
-      },
-      function(error) {
-        writeToScreen("ERREUR DE CONNEXION : " + error.headers.message);
-      });
-  }
-
-  function subscribeToChat() {
-    subscription = stompClient.subscribe("/topic/chat", 
-      function(message) { 
-        writeToScreen('<span style="color: blue;">RESPONSE: ' + message.body + '</span>')
-      });
-  }
-
-  function doSend(message) {
-    writeToScreen("SENT: " + message);
-    stompClient.send("/topic/chat", {}, message);
-  }
-
-  function writeToScreen(message) {
-    var pre = document.createElement("p");
-    pre.style.wordWrap = "break-word";
-    pre.innerHTML = message;
-    document.getElementById("output").appendChild(pre);
-  }
-
-  window.addEventListener("load", init, false);
-  </script>
-  </head>
-  <body>
-    <h2>WebSocket Test</h2>
-    <div id="output"></div>
-    <form>
+<head>
+    <title>WebSocket Test</title>
+    <script language="javascript" type="text/javascript" src="stomp.min.js"></script>
+    <script language="javascript" type="text/javascript" src="engine.js"></script>
+</head>
+<body>
+<h2>WebSocket Test</h2>
+<div id="output"></div>
+<form>
     <textarea cols="70" id="message"></textarea>
-    <br />
-    <input type="button" value="Envoyer !" onclick="doSend(getElementById('message').value); getElementById('message').value = ''" />  
-    </form>
-    
-  </body>
-  </html>
+    <br/>
+    <input type="button"
+           id="sendToChatButton"
+           value="Envoyer Chat !"
+           />
+    <input type="button"
+           id="sendToAppButton"
+           value="Envoyer Application!"
+    />
+</form>
+
+</body>
+</html>
