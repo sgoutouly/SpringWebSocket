@@ -12,7 +12,6 @@ import java.util.logging.Logger;
  * Configuration de WebSocket avec STOMP. Implique l'usage d'un broker pour router
  * les message vers des destinataires différents (clients connectés, contrôleur applicatif ou autre)
  * en fonction d'un entête de type destinataire placé dans l'enveloppe STOMP
- * Ici on se contentra de router les messages vers les clients connectés
  */
 @Configuration
 @EnableWebSocketMessageBroker
@@ -32,7 +31,7 @@ public class BrokerWebSocketConfig extends AbstractWebSocketMessageBrokerConfigu
 
     /**
      * Mise en oeuvre d'un broker basique qui broadcaste les messages vers les clients
-     * abonnés au channel /topic et d'un channel applicatif (/app) sur lequel un conrtrôleur
+     * abonnés au channel /topic et d'un channel applicatif (/app) sur lequel un contrrôleur
      * va écouter les messages et les faire suivre à son tour après avoir ajouté un préfixe
      * @param registry
      */
