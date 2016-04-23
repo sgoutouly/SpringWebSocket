@@ -1,3 +1,3 @@
 # SpringWebSocket
 
-Just try WebSocket with Spring : a branch by step
+Just try WebSocket with Spring : one branch by step
