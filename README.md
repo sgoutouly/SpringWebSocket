@@ -1,6 +1,6 @@
 # SpringWebSocket
 
-## Configuration de WebSocket avec STOMP
+## Step2 : Configuration de WebSocket avec STOMP
 
 ### Implique l'usage d'un broker pour router les messages vers des destinataires de différentes natures (clients connectés, contrôleurs applicatifs ou autre)
 
