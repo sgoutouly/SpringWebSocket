@@ -2,11 +2,21 @@
  var stompClient;
  /** */
  var subscription;
+ /** */
+ var sse;
 
   /**
    *
    */
   function init() {
+
+    //
+    sse = new EventSource("sse/connect");
+    sse.onmessage = function(event) {
+      writeToScreen("SSE : " + event.data);
+    };
+
+
     //
     websocket = new WebSocket("ws://localhost:8080/servicesSocket");
     websocket.onclose = function(evt) { writeToScreen("DECONNECTE !"); };
