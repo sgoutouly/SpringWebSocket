@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-public class GreetingController {
+public class WebSocketController {
 
     /** Permet d'écrire sur la socket depuis un service */
     @Autowired private SimpMessagingTemplate socket;
@@ -32,7 +32,7 @@ public class GreetingController {
      *
      * Je ne suis pas parvenu à utiliser String comme argument de cette méthode
      * En effet c'est le message converter Jackson qui est systématiquemebt utilisé
-     * avec l'annotation MessageMapping et ce dernier ne sait gérer que des objets JSON
+     * avec l'annotati‚‚‚on MessageMapping et ce dernier ne sait gérer que des objets JSON
      *
      * @param message
      * @return Message
