@@ -1,15 +1,11 @@
 package com.sylvaingoutouly.spring.websocket.api;
 
-import com.sylvaingoutouly.spring.websocket.service.FirstSse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -22,26 +18,22 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/sse")
 public class SseController {
 
-    /** Hold all SseEmitter instances
-     * TODO what about using a CopyOnWriteArrayList ?
+    /**
+     * Hold all SseEmitter instances
+     * CopyOnWriteArrayList is best when list is mainly accessed for reading and less for writing
      */
-    private List<SseEmitter> sseEmitters = Collections.synchronizedList(new ArrayList<SseEmitter>());
+    private CopyOnWriteArrayList<SseEmitter> sseEmitters = new CopyOnWriteArrayList<>();
 
     /**
      * EndPoint de connection au SSE
+     *
      * @return SseEmitter Le stream
      */
     @RequestMapping("/connect")
     public SseEmitter connect() {
         SseEmitter sseEmitter = new SseEmitter();
-        synchronized (this.sseEmitters) { // Need to synchronize the list when you iterate it
-            this.sseEmitters.add(sseEmitter);
-            sseEmitter.onCompletion(() -> {
-                synchronized (this.sseEmitters) {
-                    this.sseEmitters.remove(sseEmitter);
-                }
-            });
-        }
+        this.sseEmitters.add(sseEmitter);
+        sseEmitter.onCompletion(() -> this.sseEmitters.remove(sseEmitter));
         return sseEmitter;
     }
 
@@ -51,16 +43,14 @@ public class SseController {
      */
     @RequestMapping(value = "/write", method = GET)
     public void write() {
-        synchronized (this.sseEmitters) { // Need to synchronize the list when you iterate it
-            for (SseEmitter sseEmitter : this.sseEmitters) {
-                // Servlet containers don't always detect ghost connection, so we must catch exceptions ...
-                // Is it always needed ?
-                try {
-                    sseEmitter.send("coucou");
-                } catch (Exception e) {}
+        for (SseEmitter sseEmitter : this.sseEmitters) {
+            // Servlet containers don't always detect ghost connection, so we must catch exceptions ...
+            // Is it always needed ?
+            try {
+                sseEmitter.send("coucou");
+            } catch (Exception e) {
+
             }
         }
-
     }
-
 }
