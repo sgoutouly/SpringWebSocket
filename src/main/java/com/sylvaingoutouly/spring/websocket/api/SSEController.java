@@ -22,7 +22,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = "/sse")
 public class SseController {
 
-    /** Hold all SseEmitter instances */
+    /** Hold all SseEmitter instances
+     * TODO what about using a CopyOnWriteArrayList ?
+     */
     private List<SseEmitter> sseEmitters = Collections.synchronizedList(new ArrayList<SseEmitter>());
 
     /**
